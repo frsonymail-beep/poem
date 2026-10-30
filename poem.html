@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Your Name — Poems, Stories & Essays</title>
+  <meta name="description" content="Poems, short stories, and essays by Your Name." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Noto+Serif+Malayalam:wght@300..700&family=Manjari:wght@400;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* =========================================================
+       1. Design tokens
+       ========================================================= */
+    :root {
+      /* Canvas */
+      --paper: #faf7f2;
+      --card: #fffdf9;
+      --ink: #2a211c;
+      --muted: #7a6d63;
+      --border: #e7e0d8;
+
+      /* Literary accents */
+      --accent: #8b3a2b;          /* terracotta / burgundy */
+      --accent-hover: #74301f;
+      --on-accent: #fffaf3;
+      --gold: #d97706;            /* warm amber highlight */
+      --gold-soft: rgba(217, 119, 6, 0.16);
+      --sage-bg: #e9eee3;         /* soft sage tint */
+      --sage-ink: #4f6146;
+
+      --shadow: 0 1px 2px rgba(91, 60, 40, 0.05);
+      --shadow-hover: 0 10px 28px -10px rgba(91, 60, 40, 0.28), 0 2px 6px rgba(91, 60, 40, 0.06);
+
+      /* Type: Playfair for headings; Noto Serif Malayalam covers both
+         Latin and Malayalam for reading, with Manjari as a fallback. */
+      --font-display: 'Playfair Display', 'Noto Serif Malayalam', Georgia, serif;
+      --font-body: 'Noto Serif Malayalam', 'Manjari', Georgia, 'Times New Roman', serif;
+
+      --page-width: 48rem;
+      --gutter: 1.5rem;
+      --radius: 14px;
+      color-scheme: light;
+    }
+    @media (min-width: 640px) {
+      :root { --gutter: 2.5rem; }
+    }
+
+    /* Dark palette, used when the system is dark (unless the visitor chose light) */
+    @media (prefers-color-scheme: dark) {
+      :root:not(.light) {
+        --paper: #1c1917;
+        --card: #24201d;
+        --ink: #ede6dc;
+        --muted: #a8a097;
+        --border: #3a332d;
+        --accent: #d4826e;
+        --accent-hover: #e3957f;
+        --on-accent: #1c1917;
+        --gold: #f0a33a;
+        --gold-soft: rgba(240, 163, 58, 0.18);
+        --sage-bg: #2a3227;
+        --sage-ink: #b4c4a8;
+        --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        --shadow-hover: 0 12px 30px -10px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+        color-scheme: dark;
+      }
+    }
+    :root.dark {
+      --paper: #1c1917;
+      --card: #24201d;
+      --ink: #ede6dc;
+      --muted: #a8a097;
+      --border: #3a332d;
+      --accent: #d4826e;
+      --accent-hover: #e3957f;
+      --on-accent: #1c1917;
+      --gold: #f0a33a;
+      --gold-soft: rgba(240, 163, 58, 0.18);
+      --sage-bg: #2a3227;
+      --sage-ink: #b4c4a8;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      --shadow-hover: 0 12px 30px -10px rgba(0, 0, 0, 0.6), 0 2px 6px rgba(0, 0, 0, 0.3);
+      color-scheme: dark;
+    }
+
+    /* =========================================================
+       2. Base reset
+       ========================================================= */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; border: 0 solid; }
+    html { line-height: 1.5; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--font-body);
+      background: var(--paper);
+      color: var(--ink);
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "kern", "liga";
+    }
+    h1, h2, h3, p { font-size: inherit; font-weight: inherit; }
+    ul { list-style: none; }
+    a { color: inherit; text-decoration: inherit; }
+    button { font: inherit; color: inherit; background: transparent; cursor: pointer; text-align: inherit; line-height: inherit; }
+    code { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.9em; }
+    svg { display: block; flex-shrink: 0; }
+    [hidden], .hidden { display: none !important; }
+
+    ::selection { background: var(--gold-soft); color: var(--ink); }
+    a, button { -webkit-tap-highlight-color: transparent; }
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+
+    /* =========================================================
+       3. Layout
+       ========================================================= */
+    .container { max-width: var(--page-width); margin-inline: auto; padding-inline: var(--gutter); }
+
+    /* =========================================================
+       4. Hero
+       ========================================================= */
+    .hero { padding-top: 4rem; padding-bottom: 2.5rem; }
+    .hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
+    .hero-name {
+      font-family: var(--font-display);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 0.95;
+      font-size: clamp(3.1rem, 12.5vw, 8rem);
+      color: var(--ink);
+    }
+    .hero-top .icon-btn { margin-top: 0.5rem; }
+    .tagline {
+      font-family: var(--font-body);
+      font-size: 1.15rem;
+      line-height: 1.6;
+      color: var(--muted);
+      margin-top: 1.75rem;
+      max-width: 36rem;
+    }
+    .hero-rule { width: 3.5rem; height: 3px; border-radius: 3px; background: var(--gold); margin-top: 1.75rem; }
+    @media (min-width: 640px) {
+      .hero { padding-top: 7rem; }
+      .tagline { font-size: 1.35rem; }
+    }
+
+    /* =========================================================
+       5. Sticky bars & tabs
+       ========================================================= */
+    .sticky-bar {
+      background: color-mix(in srgb, var(--paper) 90%, transparent);
+      backdrop-filter: saturate(140%) blur(10px);
+      -webkit-backdrop-filter: saturate(140%) blur(10px);
+      padding-top: env(safe-area-inset-top, 0px);
+    }
+    .site-nav { position: sticky; top: 0; z-index: 20; }
+    .tablist {
+      display: flex; gap: 1.75rem;
+      border-bottom: 1px solid var(--border);
+      font-family: var(--font-display);
+      font-size: 1.05rem; font-weight: 500;
+      overflow-x: auto;
+    }
+    @media (min-width: 640px) { .tablist { gap: 2.5rem; } }
+    .tab { position: relative; color: var(--muted); padding: 0.8rem 0; transition: color .2s; white-space: nowrap; }
+    .tab:hover { color: var(--accent); }
+    .tab[aria-selected="true"] { color: var(--accent); }
+    .tab[aria-selected="true"]::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: -1px;
+      height: 3px; border-radius: 3px 3px 0 0; background: var(--accent);
+    }
+
+    /* =========================================================
+       6. Cards (story / poem previews)
+       ========================================================= */
+    .panel { padding-block: 2.5rem; min-height: 50vh; }
+    @media (min-width: 640px) { .panel { padding-block: 3.5rem; } }
+
+    .card-list { display: grid; gap: 1.25rem; }
+    .card {
+      display: block; width: 100%;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem 1.4rem;
+      box-shadow: var(--shadow);
+      text-align: left;
+      transition: box-shadow .25s ease, transform .25s ease, border-color .25s ease;
+    }
+    .card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+      border-color: color-mix(in srgb, var(--gold) 35%, var(--border));
+    }
+    .card:hover .card-title { color: var(--accent); }
+    @media (min-width: 640px) { .card { padding: 1.85rem 2rem; } }
+
+    .card-head { display: flex; flex-direction: column; gap: 0.3rem; }
+    .card-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem; line-height: 1.25; font-weight: 500;
+      transition: color .2s;
+    }
+    .card-date { font-size: 0.875rem; color: var(--muted); white-space: nowrap; }
+    .card-excerpt {
+      display: block;
+      font-size: 1.05rem; line-height: 1.75;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
+    .card-excerpt.is-poem { font-style: italic; }
+    .card-foot { display: flex; align-items: center; gap: 0.5rem; margin-top: 1rem; }
+    @media (min-width: 640px) {
+      .card-head { flex-direction: row; align-items: baseline; justify-content: space-between; gap: 1.5rem; }
+      .card-title { font-size: 1.8rem; }
+    }
+
+    .badge {
+      display: inline-flex; align-items: center;
+      font-size: 0.8rem; line-height: 1; font-weight: 500;
+      padding: 0.4rem 0.7rem;
+      border-radius: 999px;
+      background: var(--sage-bg);
+      color: var(--sage-ink);
+    }
+    .badge.lang { background: var(--gold-soft); color: var(--ink); }
+
+    .empty {
+      font-size: 1.15rem; line-height: 1.7; color: var(--muted);
+      background: var(--card); border: 1px dashed var(--border);
+      border-radius: var(--radius); padding: 1.75rem;
+    }
+
+    .about-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.75rem 1.4rem;
+      box-shadow: var(--shadow);
+    }
+    @media (min-width: 640px) { .about-card { padding: 2.25rem 2.25rem; } }
+    .about-card .reading { max-width: 38rem; }
+
+    .site-footer { padding-top: 1.5rem; padding-bottom: 3.5rem; font-size: 0.875rem; color: var(--muted); }
+
+    /* =========================================================
+       7. Buttons
+       ========================================================= */
+    .btn-primary {
+      display: inline-flex; align-items: center; justify-content: center; gap: .45rem;
+      height: 2.5rem; padding: 0 1.15rem;
+      border-radius: 999px;
+      background: var(--accent); color: var(--on-accent);
+      font-size: 0.95rem; font-weight: 500;
+      transition: background-color .2s;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .icon-btn {
+      color: var(--muted); background: var(--card);
+      border: 1px solid var(--border); border-radius: 999px;
+      height: 2.5rem; min-width: 2.5rem; padding: 0 .8rem;
+      display: inline-flex; align-items: center; justify-content: center; gap: .35rem;
+      font-size: .9rem; flex-shrink: 0;
+      transition: color .15s, border-color .15s;
+    }
+    .icon-btn:hover { color: var(--accent); border-color: var(--accent); }
+    .icon-btn.large { font-size: 1.05rem; }
+
+    .text-link {
+      color: var(--accent);
+      text-decoration: underline; text-decoration-color: var(--gold);
+      text-decoration-thickness: 1.5px; text-underline-offset: 4px;
+    }
+    .text-link:hover { text-decoration-thickness: 2.5px; }
+
+    /* =========================================================
+       8. Reader
+       ========================================================= */
+    .reader { position: fixed; inset: 0; z-index: 50; overflow-y: auto; background: var(--paper); }
+    .reader-bar { position: sticky; top: 0; z-index: 10; border-bottom: 1px solid var(--border); }
+    .reader-bar-inner {
+      max-width: var(--page-width); margin-inline: auto;
+      padding-inline: 1.25rem; height: 3.75rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 0.75rem;
+    }
+    .reader-tools { display: flex; align-items: center; gap: 0.5rem; }
+    @media (min-width: 640px) { .reader-bar-inner { padding-inline: 2.5rem; } }
+
+    .progress { height: 3px; width: 100%; background: var(--gold); transform-origin: 0 50%; transform: scaleX(0); }
+
+    .reader-body { max-width: 40rem; margin-inline: auto; padding: 3.5rem var(--gutter) 6rem; }
+    @media (min-width: 640px) { .reader-body { padding-top: 5rem; } }
+
+    .reader-enter { animation: rise .35s cubic-bezier(.2,.7,.2,1); }
+    @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+
+    .piece-header { margin-bottom: 3rem; }
+    .piece-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 0.75rem; font-size: 0.9rem; color: var(--muted); margin-bottom: 1.1rem; }
+    .piece-title {
+      font-family: var(--font-display);
+      font-weight: 500; font-size: 2.5rem; line-height: 1.1; letter-spacing: -0.015em;
+    }
+    .piece-header::after { content: ""; display: block; width: 3rem; height: 3px; border-radius: 3px; background: var(--gold); margin-top: 1.75rem; }
+    @media (min-width: 640px) {
+      .piece-header { margin-bottom: 3.75rem; }
+      .piece-title { font-size: 3.4rem; }
+    }
+
+    .reading {
+      font-family: var(--font-body);
+      font-size: var(--reading-size, 1.2rem);
+      line-height: 1.8;
+      font-weight: 400;
+    }
+    .reading p { margin: 0 0 1.15em; }
+    .reading.prose-body p + p { text-indent: 1.5em; margin-top: -1.15em; }
+    .reading .stanza { margin: 0 0 1.6em; white-space: pre-line; line-height: 1.75; }
+    .reading .break { text-align: center; color: var(--gold); margin: 2em 0; letter-spacing: .5em; }
+    /* Malayalam glyphs are taller; give them a little more room */
+    .reading:lang(ml), .reading :lang(ml) { line-height: 2; }
+    .reading:lang(ml) .stanza { line-height: 1.95; }
+    .reading:lang(ml).prose-body p + p { text-indent: 0; margin-top: 0; }
+
+    .piece-footer {
+      margin-top: 5rem; padding-top: 2rem;
+      border-top: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 1.25rem;
+      font-size: 0.95rem;
+    }
+    .back-link { color: var(--muted); text-align: left; text-underline-offset: 4px; }
+    .back-link:hover { color: var(--accent); text-decoration: underline; }
+    .next-card {
+      text-align: left;
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 0.9rem 1.2rem;
+      transition: box-shadow .25s, border-color .25s;
+    }
+    .next-card:hover { box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--gold) 35%, var(--border)); }
+    .next-label { display: block; font-size: 0.8rem; color: var(--muted); }
+    .next-title { font-family: var(--font-display); font-size: 1.25rem; color: var(--accent); }
+    @media (min-width: 640px) {
+      .piece-footer { flex-direction: row; align-items: center; justify-content: space-between; }
+      .next-card { text-align: right; }
+    }
+
+    /* =========================================================
+       9. Reduced motion
+       ========================================================= */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+      .card:hover { transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===================== MAIN SITE ===================== -->
+  <div id="site">
+    <header class="container hero">
+      <div class="hero-top">
+        <h1 class="hero-name" id="author-name">Your<br />Name</h1>
+        <button id="theme-toggle" class="icon-btn" aria-label="Switch between light and dark">
+          <svg id="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg id="icon-sun" class="hidden" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        </button>
+      </div>
+      <p id="author-tagline" class="tagline">Poems, short stories, and essays, written slowly and kept here.</p>
+      <div class="hero-rule" aria-hidden="true"></div>
+    </header>
+
+    <nav class="container site-nav sticky-bar">
+      <div role="tablist" aria-label="Sections" class="tablist">
+        <button role="tab" class="tab" data-tab="poems" id="tab-poems" aria-controls="panel">Poems</button>
+        <button role="tab" class="tab" data-tab="stories" id="tab-stories" aria-controls="panel">Stories</button>
+        <button role="tab" class="tab" data-tab="essays" id="tab-essays" aria-controls="panel">Essays</button>
+        <button role="tab" class="tab" data-tab="about" id="tab-about" aria-controls="panel">About</button>
+      </div>
+    </nav>
+
+    <main id="panel" role="tabpanel" class="container panel"></main>
+
+    <footer class="container site-footer">
+      <span id="footer-text">© Your Name. All writing on this site is mine; please ask before reprinting.</span>
+    </footer>
+  </div>
+
+  <!-- ===================== READER ===================== -->
+  <div id="reader" class="reader" hidden role="dialog" aria-modal="true" aria-labelledby="reader-title">
+    <div class="reader-bar sticky-bar">
+      <div class="reader-bar-inner">
+        <button id="reader-close" class="btn-primary" aria-label="Close and return to the list">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          <span>Back</span>
+        </button>
+        <div class="reader-tools">
+          <button id="font-down" class="icon-btn" aria-label="Smaller text">A−</button>
+          <button id="font-up" class="icon-btn large" aria-label="Larger text">A+</button>
+        </div>
+      </div>
+      <div id="progress" class="progress"></div>
+    </div>
+
+    <article id="reader-body" class="reader-body"></article>
+  </div>
+
+  <script>
+    /* =========================================================
+       EDIT YOUR SITE HERE
+       ---------------------------------------------------------
+       - author: your name, tagline, and About page text.
+       - works:  every piece you publish. Add a new object to
+                 the list and it appears in the right tab.
+         type:   "poems" | "stories" | "essays"
+         lang:   optional. Use "ml" for Malayalam pieces so the
+                 browser shapes and spaces the script correctly.
+         body:   Write inside backticks (` `). For poems, separate
+                 stanzas with a blank line; line breaks are kept
+                 exactly as typed. For prose, separate paragraphs
+                 with a blank line. A line with only *** becomes a
+                 section break.
+       Save this file as UTF-8 so Malayalam text displays correctly.
+       ========================================================= */
+    const author = {
+      name: "Your Name",
+      tagline: "Poems, short stories, and essays, written slowly and kept here.",
+      about: [
+        "I write poems, short fiction, and the occasional essay. I live somewhere with a lot of rain and not enough bookshelves.",
+        "My work has appeared in a handful of small journals. This site collects the pieces I want to keep in one place.",
+        "For readings, reprints, or just to say hello, write to me at hello@example.com."
+      ],
+      email: "hello@example.com"
+    };
+
+    const works = [
+      {
+        id: "monsoon-letter",
+        type: "poems",
+        title: "Monsoon Letter",
+        date: "2026-07-14",
+        body: `The rain arrived the way you used to,
+without knocking, sure of its welcome,
+leaving its shoes by the door.
+
+I have kept the window open all week.
+The curtains have learned your name
+and say it softly, mostly at night.
+
+What I mean is: the house is wet
+and full of sound, and I am not
+lonely, exactly. I am listening.`
+      },
+      {
+        id: "mazha",
+        type: "poems",
+        lang: "ml",
+        title: "മഴ",
+        date: "2026-06-02",
+        body: `ജനലരികിൽ മഴ പെയ്യുന്നു,
+പഴയൊരു പാട്ടു മൂളുന്നു.
+
+ഇലകളിൽ വീഴും തുള്ളികളിൽ
+ഇന്നലെയുടെ നിഴലുകൾ.`
+      },
+      {
+        id: "inventory",
+        type: "poems",
+        title: "Inventory",
+        date: "2026-03-02",
+        body: `One chipped cup. Two keys
+to doors I no longer own.
+A ticket stub, its ink gone pale as breath.
+
+I count these things the way
+some people pray, not for an answer,
+only to hear the counting.`
+      },
+      {
+        id: "the-ferryman",
+        type: "stories",
+        title: "The Ferryman's Daughter",
+        date: "2026-05-21",
+        body: `Every evening at six, Mira rowed the last passengers across the backwater, and every evening the same old man asked her whether the far bank had moved.
+
+"It moves a little every year," she told him, the first time, because it was true. The river took a handful of earth here and gave it back there, patiently, like someone rearranging furniture in the dark.
+
+He nodded as if this confirmed something. He paid in coins too old to spend, and she kept them in a tin under the bench without ever asking where they came from.
+
+***
+
+In the ninth year, he did not come. Mira waited until the light went copper and then grey, the oars resting across her knees.
+
+When she finally pushed off, the boat felt lighter than it should have. Halfway across, she realised she could not see the far bank at all, only water, and the water was very calm, and very patient, and she understood that it had been waiting too.`
+      },
+      {
+        id: "on-slowness",
+        type: "essays",
+        title: "On Writing Slowly",
+        date: "2026-01-10",
+        body: `I used to believe that a draft was a problem to be solved as quickly as possible. Now I think of it more like dough: something that needs time on the counter before it becomes what it is going to be.
+
+This is not a fashionable belief. We are told to ship, to publish, to keep the feed fed. But a poem written in an afternoon and posted by evening has not yet had the chance to surprise its author. It has only said what I already knew.
+
+The pieces on this site took months, sometimes years. Not because I was working on them every day, but because I was not. I would leave them alone, and come back, and find that they had quietly changed while I wasn't looking.
+
+***
+
+If there is a method here, it is only this: write it down, put it away, and trust that you will be a slightly different reader next time.`
+      }
+    ];
+
+    /* ===================== APP ===================== */
+    const $ = (s) => document.querySelector(s);
+    const panel = $('#panel');
+    const reader = $('#reader');
+    const readerBody = $('#reader-body');
+    const labels = { poems: 'poem', stories: 'story', essays: 'essay' };
+    let lastFocus = null;
+
+    const esc = (s) => s.replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const fmtDate = (d) => new Date(d + 'T00:00:00').toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    const words = (t) => t.trim().split(/\s+/).length;
+    const minutes = (t) => Math.max(1, Math.round(words(t) / 230));
+    const langAttr = (w) => w.lang ? ` lang="${esc(w.lang)}"` : '';
+    const typeset = (t) => t
+      .replace(/(^|[\s(\[])"/g, '$1“').replace(/"/g, '”')
+      .replace(/(^|[\s(\[])'/g, '$1‘').replace(/'/g, '’')
+      .replace(/--/g, '—').replace(/\.\.\./g, '…');
+
+    function excerpt(w) {
+      const lines = w.body.trim().split(/\n/).filter(l => l.trim() && l.trim() !== '***');
+      if (w.type === 'poems') return lines.slice(0, 2).join(' / ');
+      const p = lines[0];
+      return p.length > 160 ? p.slice(0, 157).replace(/\s+\S*$/, '') + '…' : p;
+    }
+
+    /* ---------- Author text ---------- */
+    function applyAuthor() {
+      const parts = author.name.trim().split(/\s+/);
+      $('#author-name').innerHTML = parts.length > 1
+        ? esc(parts.slice(0, -1).join(' ')) + '<br>' + esc(parts.at(-1))
+        : esc(author.name);
+      $('#author-tagline').textContent = typeset(author.tagline);
+      $('#footer-text').textContent = `© ${new Date().getFullYear()} ${author.name}. All writing on this site is mine; please ask before reprinting.`;
+      document.title = `${author.name} — Poems, Stories & Essays`;
+    }
+
+    /* ---------- Lists ---------- */
+    function renderList(type) {
+      const items = works.filter(w => w.type === type).sort((a, b) => b.date.localeCompare(a.date));
+      if (!items.length) {
+        panel.innerHTML = `<p class="empty">No ${type} here yet. Add one to the <code>works</code> list in this file to publish it.</p>`;
+        return;
+      }
+      panel.innerHTML = `<ul class="card-list">${items.map(w => `
+        <li>
+          <button data-open="${esc(w.id)}" class="card">
+            <span class="card-head">
+              <span class="card-title"${langAttr(w)}>${esc(typeset(w.title))}</span>
+              <span class="card-date">${fmtDate(w.date)}</span>
+            </span>
+            <span class="card-excerpt${w.type === 'poems' && !w.lang ? ' is-poem' : ''}"${langAttr(w)}>${esc(typeset(excerpt(w)))}</span>
+            <span class="card-foot">
+              <span class="badge">${minutes(w.body)} min read</span>
+              ${w.lang === 'ml' ? '<span class="badge lang">മലയാളം</span>' : ''}
+            </span>
+          </button>
+        </li>`).join('')}</ul>`;
+    }
+
+    function renderAbout() {
+      panel.innerHTML = `
+        <div class="about-card">
+          <div class="reading prose-body">
+            ${author.about.map(p => `<p>${esc(typeset(p))}</p>`).join('')}
+          </div>
+          <p style="margin-top:1.5rem">
+            <a href="mailto:${esc(author.email)}" class="text-link">${esc(author.email)}</a>
+          </p>
+        </div>`;
+    }
+
+    function selectTab(tab) {
+      document.querySelectorAll('[role="tab"]').forEach(b => {
+        const on = b.dataset.tab === tab;
+        b.setAttribute('aria-selected', on);
+        b.tabIndex = on ? 0 : -1;
+      });
+      panel.setAttribute('aria-labelledby', 'tab-' + tab);
+      tab === 'about' ? renderAbout() : renderList(tab);
+    }
+
+    /* ---------- Reader ---------- */
+    function renderBody(w) {
+      const blocks = w.body.trim().split(/\n\s*\n/);
+      if (w.type === 'poems') {
+        return `<div class="reading"${langAttr(w)}>${blocks.map(b => `<p class="stanza">${esc(typeset(b.trim()))}</p>`).join('')}</div>`;
+      }
+      return `<div class="reading prose-body"${langAttr(w)}>${blocks.map(b =>
+        b.trim() === '***' ? `<p class="break" aria-hidden="true">✦ ✦ ✦</p>` : `<p>${esc(typeset(b.trim()))}</p>`
+      ).join('')}</div>`;
+    }
+
+    function openReader(id, push = true) {
+      const w = works.find(x => x.id === id);
+      if (!w) return;
+      lastFocus = document.activeElement;
+      const list = works.filter(x => x.type === w.type).sort((a, b) => b.date.localeCompare(a.date));
+      const next = list[list.indexOf(w) + 1];
+
+      readerBody.innerHTML = `
+        <header class="piece-header">
+          <p class="piece-meta">
+            <span class="badge">${labels[w.type].charAt(0).toUpperCase() + labels[w.type].slice(1)}</span>
+            <span>${fmtDate(w.date)}</span>
+            <span>${minutes(w.body)} min read</span>
+          </p>
+          <h2 id="reader-title" class="piece-title"${langAttr(w)}>${esc(typeset(w.title))}</h2>
+        </header>
+        ${renderBody(w)}
+        <footer class="piece-footer">
+          <button data-close class="back-link">Back to all ${w.type}</button>
+          ${next ? `<button data-open="${esc(next.id)}" class="next-card">
+            <span class="next-label">Next ${labels[w.type]}</span>
+            <span class="next-title"${langAttr(next)}>${esc(typeset(next.title))}</span>
+          </button>` : ''}
+        </footer>`;
+
+      reader.hidden = false;
+      reader.scrollTop = 0;
+      readerBody.classList.remove('reader-enter'); void readerBody.offsetWidth; readerBody.classList.add('reader-enter');
+      document.body.style.overflow = 'hidden';
+      document.title = `${w.title} — ${author.name}`;
+      if (push) history.pushState(null, '', '#' + w.id);
+      updateProgress();
+      $('#reader-close').focus({ preventScroll: true });
+    }
+
+    function closeReader(push = true) {
+      if (reader.hidden) return;
+      const current = works.find(x => '#' + x.id === location.hash);
+      reader.hidden = true;
+      document.body.style.overflow = '';
+      document.title = `${author.name} — Poems, Stories & Essays`;
+      if (push) history.pushState(null, '', '#' + (current ? current.type : currentTab()));
+      if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
+    }
+
+    function updateProgress() {
+      const max = reader.scrollHeight - reader.clientHeight;
+      $('#progress').style.transform = `scaleX(${max > 0 ? reader.scrollTop / max : 1})`;
+    }
+
+    /* ---------- Font size ---------- */
+    const sizes = [1.0, 1.1, 1.2, 1.32, 1.45];
+    let sizeIdx = 2;
+    try { const s = localStorage.getItem('reading-size'); if (s !== null) sizeIdx = Math.min(sizes.length - 1, Math.max(0, +s)); } catch (e) {}
+    function applySize() {
+      document.documentElement.style.setProperty('--reading-size', sizes[sizeIdx] + 'rem');
+      try { localStorage.setItem('reading-size', sizeIdx); } catch (e) {}
+    }
+
+    /* ---------- Theme ---------- */
+    function isDark() {
+      const r = document.documentElement;
+      if (r.classList.contains('dark')) return true;
+      if (r.classList.contains('light')) return false;
+      return matchMedia('(prefers-color-scheme: dark)').matches;
+    }
+    function setTheme(mode) {
+      const r = document.documentElement;
+      r.classList.remove('dark', 'light');
+      if (mode) r.classList.add(mode);
+      $('#icon-moon').classList.toggle('hidden', isDark());
+      $('#icon-sun').classList.toggle('hidden', !isDark());
+    }
+    let savedTheme = null;
+    try { savedTheme = localStorage.getItem('theme'); } catch (e) {}
+    setTheme(savedTheme);
+    matchMedia('(prefers-color-scheme: dark)').addEventListener?.('change', () => {
+      const r = document.documentElement;
+      if (!r.classList.contains('dark') && !r.classList.contains('light')) setTheme(null);
+    });
+
+    /* ---------- Routing ---------- */
+    const tabs = ['poems', 'stories', 'essays', 'about'];
+    function currentTab() {
+      return document.querySelector('[role="tab"][aria-selected="true"]')?.dataset.tab || 'poems';
+    }
+    function route() {
+      const h = decodeURIComponent(location.hash.slice(1));
+      const w = works.find(x => x.id === h);
+      if (w) { if (currentTab() !== w.type || !panel.innerHTML) selectTab(w.type); openReader(w.id, false); }
+      else { closeReader(false); selectTab(tabs.includes(h) ? h : 'poems'); }
+    }
+
+    /* ---------- Events ---------- */
+    document.addEventListener('click', (e) => {
+      const tab = e.target.closest('[role="tab"]');
+      if (tab) { selectTab(tab.dataset.tab); history.pushState(null, '', '#' + tab.dataset.tab); return; }
+      const open = e.target.closest('[data-open]');
+      if (open) { openReader(open.dataset.open); return; }
+      if (e.target.closest('[data-close]')) closeReader();
+    });
+
+    $('[role="tablist"]').addEventListener('keydown', (e) => {
+      if (!['ArrowLeft', 'ArrowRight'].includes(e.key)) return;
+      const i = tabs.indexOf(currentTab());
+      const n = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length];
+      selectTab(n); history.pushState(null, '', '#' + n);
+      $('#tab-' + n).focus();
+    });
+
+    $('#reader-close').addEventListener('click', () => closeReader());
+    $('#font-up').addEventListener('click', () => { sizeIdx = Math.min(sizes.length - 1, sizeIdx + 1); applySize(); });
+    $('#font-down').addEventListener('click', () => { sizeIdx = Math.max(0, sizeIdx - 1); applySize(); });
+    $('#theme-toggle').addEventListener('click', () => {
+      const mode = isDark() ? 'light' : 'dark';
+      setTheme(mode);
+      try { localStorage.setItem('theme', mode); } catch (e) {}
+    });
+    reader.addEventListener('scroll', updateProgress, { passive: true });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeReader(); });
+    window.addEventListener('popstate', route);
+
+    /* ---------- Start ---------- */
+    applyAuthor();
+    applySize();
+    route();
+  </script>
+</body>
+</html>
